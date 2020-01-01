@@ -1,0 +1,8 @@
+# cut image
+gdal_translate -projwin -124.93 52 -60 20 wc2.0_30s_wind_01.tif wc2.0_30s_wind_01_out.tif
+
+# convert to shapefile
+python /usr/local/Cellar/gdal/2.4.2/bin/gdal_polygonize.py wc2.0_30s_wind_01_out.tif -f "ESRI Shapefile" file.shp
+
+# convert geotiff to ascii
+gdal_translate -of AAIGrid wc2.0_30s_wind_01_out.tif out.asc

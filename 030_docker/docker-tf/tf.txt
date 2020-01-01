@@ -1,0 +1,22 @@
+docker pull tensorflow/tensorflow
+
+docker run -it -d --name tf_master -p 1111:1111 tensorflow/tensorflow bash
+
+###
+im container:
+pip install sklearn
+pip install pandas
+
+### starte serving container
+docker run -it -p 8501:8501 -v /sharedfolder/docker-tensorflow/models:/models/boostedtree -e MODEL_NAME=boostedtree tensorflow/serving
+
+### zeige signaturen der modelle (im tf container)
+saved_model_cli show --dir /data/models/1567594647/ --all
+
+### 
+saved_model_cli run --dir /data/models/1567594647/ --tag_set serve --signature_def predict --input_examples 'example=[{"Latitude":[-132.3],"Longitude":[76.3],"Speed":[12.3],"Volume":[12.2],"Celsius":[2.4]}]'
+
+
+
+curl -X POST http://192.168.2.104:8501/v1/models/boostedtree:classify -d '{"signature_name": "classification", "examples": [{"Latitude":-142.4,"Longitude":87.3,"Speed":12.4,"Volume":18.4,"Celsius":35.4}]}'
+
